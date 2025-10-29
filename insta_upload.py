@@ -1,6 +1,6 @@
 import argparse
 from instagrapi import Client
-import configparser
+import tomllib
 import os
 
 def login(username, password):
@@ -34,11 +34,13 @@ def upload_reel(cl, video_path, description):
 
 def main():
     # Load configuration
-    config = configparser.ConfigParser()
+    with open("config.toml", "rb") as f:
+        config = tomllib.load(f)
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     config.read(os.path.join(script_dir, 'instagram_creds.conf'))  # Updated to use .conf file
 
-    # Retrieve username and password from config file
+    # Retrieve username and password from toml file
     username = config['instagram']['username']
     password = config['instagram']['password']
 

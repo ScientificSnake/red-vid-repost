@@ -14,8 +14,13 @@ python3 -m venv myenv
 
 source myenv/bin/activate
 
-log "Running the Python application..."
-python3 main.py
+log "Downloading videos"
+python3 videodownloader.py 'nextfuckinglevel'
+
+
+
+
+
 
 deactivate
 log "Deactivating virtual environment..."
