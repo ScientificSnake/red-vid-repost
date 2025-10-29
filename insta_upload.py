@@ -37,8 +37,8 @@ def main():
     with open("config.toml", "rb") as f:
         config = tomllib.load(f)
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    config.read(os.path.join(script_dir, 'instagram_creds.conf'))  # Updated to use .conf file
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    # config.read(os.path.join(script_dir, 'instagram_creds.conf'))  # Updated to use .conf file FIXME NEED TO MIGRATE TO TOML USE
 
     # Retrieve username and password from toml file
     username = config['instagram']['username']
