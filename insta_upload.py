@@ -57,5 +57,33 @@ def main():
     # Upload the reel
     upload_reel(cl, args.video, args.description)
 
+
+def python_call_insta_upload(video_path: str, caption: str):
+
+    # Load configuration
+    with open("config.toml", "rb") as f:
+        config = tomllib.load(f)
+
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    # config.read(os.path.join(script_dir, 'instagram_creds.conf'))  # Updated to use .conf file FIXME NEED TO MIGRATE TO TOML USE
+
+    # Retrieve username and password from toml file
+    username = config['instagram']['username']
+    password = config['instagram']['password']
+
+    # Set up command-line argument parsing
+    # parser = argparse.ArgumentParser(description="Upload an Instagram Reel from video source.")
+    # parser.add_argument("video", type=str, help="Path to the video file")
+    # parser.add_argument("description", type=str, help="Caption for the reel")
+
+    # args = parser.parse_args()
+
+    # Log in to Instagram
+    cl = login(username, password)
+    
+    # Upload the reel
+    upload_reel(cl, video_path, caption)
+
+
 if __name__ == "__main__":
     main()

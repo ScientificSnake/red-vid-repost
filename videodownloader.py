@@ -36,7 +36,7 @@ def download_video(reddit_video_url, output_folder, output_name):
     audio_clip = mpe.AudioFileClip(audio_file_name)
     final_clip = video_clip.set_audio(audio_clip)
     print(f"Saving: {output_file_name}")
-    final_clip.write_videofile(f"{output_folder}/{output_file_name}", logger=None)  # NoQA
+    final_clip.write_videofile(f"{output_folder}/{output_file_name}", logger=None)
 
     os.remove(video_file_name)
     os.remove(audio_file_name)
@@ -76,6 +76,20 @@ def main():
             with open('used_submissions.txt', 'a') as file:
                 file.write(f'\n{submission.title}')
 
+
+def download_from_sub(count: int, subreddit: str,):
+    """THIS FUNCTION ONLY WORKS WITH COUNT OF ONE IDK WHY"""
+    with open('used_submissions.txt') as file:
+        previously_used_submissions = [line.rstrip() for line in file]
+    for submission in reddit.subreddit(subreddit).top(limit=count):
+        video_url = get_video_url(submission)
+        if video_url is not None and submission.title not in previously_used_submissions:
+            download_video(video_url, output, submission.title)
+            with open('used_submissions.txt', 'a') as file:
+                file.write(f'\n{submission.title}')
+            return submission.title, True
+        else:
+            return None, False
 
 
 if __name__ == "__main__":
