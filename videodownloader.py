@@ -4,18 +4,13 @@ import praw
 import requests
 import re
 import moviepy.editor as mpe
-import tomllib
-import argparse
 import os
-
-with open('config.toml', 'rb') as f:
-    config = tomllib.load(f) 
 
 
 reddit = praw.Reddit(
-    client_id=config['reddit']['client_id'],
-    client_secret=['reddit']['client_secret'],
-    user_agent=['reddit']['user_agent'])
+    client_id='N-qkvn6y-T-R4OcebRTthw',
+    client_secret='_Wvw36SK3HnTFughWVG2nBTDwBKjDw',
+    user_agent='Reddit Video Reposter by /u/Glum_Assumption_6148')
 
 output = "videos"
 
@@ -36,7 +31,7 @@ def download_video(reddit_video_url, output_folder, output_name):
     audio_clip = mpe.AudioFileClip(audio_file_name)
     final_clip = video_clip.set_audio(audio_clip)
     print(f"Saving: {output_file_name}")
-    final_clip.write_videofile(f"{output_folder}/{output_file_name}", logger=None)
+    final_clip.write_videofile(f"{output_folder}/{output_file_name}", logger=None)  # NoQA
 
     os.remove(video_file_name)
     os.remove(audio_file_name)
@@ -57,39 +52,20 @@ def get_video_url(submission):
 
 
 def main():
-
-    parser = argparse.ArgumentParser(description='Download an amount of videos from a subreddit')
-
-    parser.add_argument('--count', type=int, default=1, help='amount of videos to download')
-    parser.add_argument('subreddit', type=str, help='Which sub reddit to pull from')
-
-    args = parser.parse_args()
-
-    with open('used_submissions.txt') as file:
-        previously_used_submissions = [line.rstrip() for line in file]
-
-
-    for submission in reddit.subreddit(args.subreddit).top(limit=parser.count):
+    for submission in reddit.subreddit("nextfuckinglevel").top(limit=25):
         video_url = get_video_url(submission)
-        if video_url is not None and submission.title not in previously_used_submissions:
+        if video_url is not None:
             download_video(video_url, output, submission.title)
-            with open('used_submissions.txt', 'a') as file:
-                file.write(f'\n{submission.title}')
 
 
-def download_from_sub(count: int, subreddit: str,):
-    """THIS FUNCTION ONLY WORKS WITH COUNT OF ONE IDK WHY"""
-    with open('used_submissions.txt') as file:
-        previously_used_submissions = [line.rstrip() for line in file]
-    for submission in reddit.subreddit(subreddit).top(limit=count):
-        video_url = get_video_url(submission)
-        if video_url is not None and submission.title not in previously_used_submissions:
-            download_video(video_url, output, submission.title)
-            with open('used_submissions.txt', 'a') as file:
-                file.write(f'\n{submission.title}')
-            return submission.title, True
-        else:
-            return None, False
+def download_singular(sub_name, time_span):
+    submission = reddit.subreddit(sub_name).top(time_filter=time_span, limit=1)
+    video_url = get_video_url(submission)
+    if video_url is not None:
+        download_video(video_url, output, submission.title)
+        return True, submission.title
+    else:
+        return False, submission.title
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ from instagrapi import Client
 import tomllib
 import os
 
+
 def login(username, password):
     cl = Client()
     session_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'session.json')
@@ -22,8 +23,9 @@ def login(username, password):
         cl.login(username, password)
         cl.dump_settings(session_file)
         print("Logged in and session saved.")
-    
+
     return cl
+
 
 def upload_reel(cl, video_path, description):
     try:
@@ -31,6 +33,7 @@ def upload_reel(cl, video_path, description):
         print(f"Reel uploaded successfully: {media}")
     except Exception as e:
         print(f"Failed to upload reel: {e}")
+
 
 def main():
     # Load configuration
@@ -53,7 +56,7 @@ def main():
 
     # Log in to Instagram
     cl = login(username, password)
-    
+
     # Upload the reel
     upload_reel(cl, args.video, args.description)
 
@@ -80,7 +83,7 @@ def python_call_insta_upload(video_path: str, caption: str):
 
     # Log in to Instagram
     cl = login(username, password)
-    
+
     # Upload the reel
     upload_reel(cl, video_path, caption)
 
